@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCEANWATCH-IoT | TRON Edition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="header">
+            <div class="title">OCEANWATCH-IoT | MV-OCEANWATCH-01</div>
+            <div class="eta" id="eta">ETA: --:--</div>
+        </div>
+
+        <div class="data-tile">
+            <div class="tile-label">Coordenadas</div>
+            <div class="tile-value-gms" id="lat">00° 00' 00" N</div>
+            <div class="tile-value-gms" id="lng">00° 00' 00" W</div>
+        </div>
+
+        <div class="data-tile compass-tile">
+            <div class="tile-label">Rumbo Actual</div>
+            <div class="compass-ring">
+                <div class="needle" id="needle"></div>
+                <span class="cardinal n">N</span>
+                <span class="cardinal e">E</span>
+                <span class="cardinal s">S</span>
+                <span class="cardinal w">W</span>
+            </div>
+            <div class="tile-value" style="font-size: 24px; margin-top: 35px;" id="rumbo">000<span class="unit">°</span></div>
+        </div>
+
+        <div class="data-tile depth-tile">
+            <div class="tile-label">Profundidad</div>
+            <div class="tile-value" id="profundidad">0<span class="unit">ft</span></div>
+            <div class="depth-gauge">
+                <div class="depth-fill" id="depth-fill"></div>
+            </div>
+        </div>
+
+        <div class="data-tile">
+            <div class="tile-label">Velocidad</div>
+            <div class="tile-value" id="velocidad">0.0<span class="unit">nudos</span></div>
+        </div>
+
+        <div class="data-tile">
+            <div class="tile-label">Estado del Mar</div>
+            <div class="tile-value" style="font-size: 20px;" id="mar">--</div>
+            <div class="sub-value" id="viento">Viento: 0 nudos</div>
+        </div>
+        
+        <div class="data-tile chart-tile">
+            <div class="chart-placeholder">
+                <div class="chart-line"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function convertirAGMS(coordenada, esLatitud) {
+            const valorAbsoluto = Math.abs(coordenada);
+            const grados = Math.floor(valorAbsoluto);
+            const residuoMinutos = (valorAbsoluto - grados) * 60;
+            const minutos = Math.floor(residuoMinutos);
+            const segundos = Math.floor((residuoMinutos - minutos) * 60);
+            
+            let direccion = "";
+            if (esLatitud) {
+                direccion = coordenada >= 0 ? "N" : "S";
+            } else {
+                direccion = coordenada >= 0 ? "E" : "W";
+            }
+            
+            return `${grados}° ${minutos}' ${segundos}" ${direccion}`;
+        }
+
+        // Conexión con el servidor Express
+        async function obtenerTelemetria() {
+            try {
+                const respuesta = await fetch('http://localhost:3000/api/telemetria');
+                const datos = await respuesta.json();
+
+                document.querySelector('.title').innerText = "OCEANWATCH-IoT | MV-OCEANWATCH-01";
+                document.querySelector('.title').style.color = "var(--neon-cyan)"; 
+
+                // Mostramos las coordenadas convertidas usando el nuevo HTML
+                document.getElementById('lat').innerText = convertirAGMS(datos.coordenadas.lat, true);
+                document.getElementById('lng').innerText = convertirAGMS(datos.coordenadas.lng, false);
+                
+                document.getElementById('rumbo').innerHTML = `${datos.rumbo}<span class="unit">°</span>`;
+                document.getElementById('needle').style.transform = `rotate(${datos.rumbo}deg)`;
+                
+                document.getElementById('profundidad').innerHTML = `${datos.profundidad_pies}<span class="unit">ft</span>`;
+                const porcentajeProfundidad = (datos.profundidad_pies / 50) * 100;
+                document.getElementById('depth-fill').style.width = `${porcentajeProfundidad}%`;
+
+                document.getElementById('velocidad').innerHTML = `${datos.velocidad_nudos.toFixed(1)}<span class="unit">nudos</span>`;
+                document.getElementById('mar').innerText = datos.clima.estado_mar;
+                document.getElementById('viento').innerText = `Viento: ${datos.clima.viento_nudos} nudos`;
+                
+                const fechaEta = new Date(datos.eta);
+                document.getElementById('eta').innerText = `ETA: ${fechaEta.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+
+            } catch (error) {
+                console.error("Error al conectar con el buque:", error);
+                document.querySelector('.title').innerText = "ERROR DE CONEXIÓN";
+                document.querySelector('.title').style.color = "#ff0055";
+            }
+        }
+
+        obtenerTelemetria();
+        setInterval(obtenerTelemetria, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+        :root {
+            --bg-dark: #000212;
+            --grid-color: rgba(0, 255, 255, 0.2);
+            --neon-cyan: #00ffff;
+            --neon-blue: #0088ff;
+            --text-color: #ffffff;
+            --panel-bg: rgba(0, 20, 40, 0.6);
+            --glow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(rgba(0, 30, 60, 0.8), var(--bg-dark));
+            background-size: 50px 50px, 50px 50px, cover;
+            background-position: center bottom;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0% 100%, 0% 100%, center bottom; }
+            100% { background-position: 0% 0%, 0% 0%, center bottom; }
+        }
+
+        .dashboard-container {
+            width: 90%;
+            max-width: 1100px;
+            background-color: var(--panel-bg);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--neon-blue);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-cyan);
+            text-shadow: var(--glow);
+        }
+
+        .eta {
+            font-size: 14px;
+            color: var(--neon-blue);
+        }
+
+        .data-tile {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .data-tile:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        .tile-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--neon-blue);
+            margin-bottom: 8px;
+        }
+
+        .tile-value-gms {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+        }
+
+        .tile-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .unit {
+            font-size: 16px;
+            font-weight: normal;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 5px;
+        }
+
+        .compass-tile {
+            grid-column: 2 / 3;
+            grid-row: 2 / 4;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+        }
+
+        .compass-tile .tile-label {
+            margin-bottom: 25px;
+        }
+
+        .compass-ring {
+            width: 180px;
+            height: 180px;
+            border: 4px solid var(--neon-cyan);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: var(--glow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cardinal {
+            position: absolute;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            text-shadow: var(--glow);
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        .n { 
+            top: -25px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+        }
+
+        .s {
+            bottom: -25px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+          }
+
+        .e { 
+            right: -20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+          }
+
+        .w { 
+            left: -20px; 
+            top: 50%; 
+            transform: translateY(-50%);
+         }
+
+        .needle {
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(to bottom, var(--neon-cyan), transparent);
+            position: absolute;
+            bottom: 50%;
+            left: calc(50% - 2px);
+            transform-origin: bottom center;
+            transform: rotate(0deg);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .depth-tile {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+        }
+
+        .depth-gauge {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .depth-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan));
+            width: 0%;
+            box-shadow: 0 0 10px var(--neon-cyan);
+            transition: width 0.5s ease;
+        }
+        
+        .chart-tile {
+            grid-column: 1 / -1;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border-color: var(--neon-blue);
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0, 136, 255, 0.1) 20px);
+            position: relative;
+        }
+        
+        .chart-line {
+            position: absolute;
+            bottom: 20px; left: 0; right: 0; height: 2px;
+            background-color: var(--neon-cyan);
+            box-shadow: var(--glow);
+        }
