@@ -13,3 +13,14 @@ Este proyecto consiste en un **ecosistema de telemetría en tiempo real** para e
 * ☁️ **Persistencia en la Nube:** Integración directa con **AWS DynamoDB** para registrar el historial de navegación de la nave segundo a segundo de manera escalable.
 
 * 🔒 **Arquitectura Resiliente:** El backend cuenta con políticas de CORS optimizadas para un tráfico seguro, y la interfaz gráfica incluye un sistema de manejo de errores que detecta fallas de conexión.
+
+## 📂 Estructura del Proyecto
+
+```text
+├── public/
+│   ├── index.html      # Interfaz de usuario (Panel TRON, Brújula y GMS)
+│   └── css/            # Estilos visuales y animaciones de neón
+├── servidor.js         # API REST en Express y conexión segura a AWS DynamoDB
+├── simulador.js        # Script de generación de datos de telemetría IoT
+├── .gitignore          # Archivo de exclusión para proteger credenciales (.env)
+└── package.json        # Dependencias del proyecto (dotenv, @aws-sdk)
